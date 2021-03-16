@@ -15,25 +15,71 @@ library(shinyjs)
 
 ## Data uploading 
 
-d1 <- read.csv("https://query.data.world/s/5wf2wrk6i64gtnr767jao3tggq6oqx", header=TRUE, stringsAsFactors=FALSE)
-d2 <- read.csv("https://query.data.world/s/6gngqdy43z6uiul3pndvtyq677wtjv", header=TRUE, stringsAsFactors=FALSE)
-
-d3=merge(d1,d2,by=c("school","sex","age","address","famsize","Pstatus","Medu","Fedu","Mjob","Fjob","reason","nursery","internet"))
-
 is.na(d1)
 is.na(d2)
 is.na(d3)
 
-# No missing values
+winered <- read.csv("https://query.data.world/s/yy4ie6vjf6igi2yyhty4s5ay2pmogx", header=TRUE, stringsAsFactors=FALSE)
+winewhite <- read.csv("https://query.data.world/s/tmlt63lm3n3uzb2ujhlmkarlzoeo73", header=TRUE, stringsAsFactors=FALSE)
 
-d3$school=as.factor(Backpack$Year)
+unique(is.na(winered))# no missing values
+unique(is.na(winewhite)) #no missing values
+
+
+
+#RED WINE DATA EDITS
+
+summary(winered)
+
+str(winered)
+
+apply(winered, 2, function(x) length(unique(x)))
+
+#all clearly continuous except quality, which has 6 possible values (on a scale of 10 bizarrely)
+
+apply(winewhite, 2, function(x) length(unique(x)))
+
+unique(winered$quality)
+
+#Will make a dummy for the wine quality as "better" and "worse"
+
+winered$quality2 <-ifelse((winered$quality>=4) & (winered$quality>=5),1,0)
+
+winered$quality <- as.factor(winered$quality) #make original a factor
+
+winered$quality2 <- as.factor(winered$quality2) #make dummy a factor
+
+str(winered)
+
+c(table(winered$quality2)) #number of categories, extremely unbalanced
 
 
 
 
-list_choices <-  unique(Backpack$Year)
 
-names(list_choices) <- paste0(list_choices," Year")
+#WHITE WINE DATA EDITS
+
+summary(winewhite)
+
+str(winewhite)
+
+apply(winewhite, 2, function(x) length(unique(x)))
+
+#all clearly continuous except quality, which has 7 possible values (on a scale of 10 bizzarely)
+
+apply(winewhite, 2, function(x) length(unique(x)))
+
+unique(winewhite$quality)
+
+#Will make a dummy for the wine quality as "better" and "worse"
+
+winewhite$quality2 <-ifelse((winewhite$quality>=4) & (winewhite$quality>=5),1,0)
+
+winewhite$quality <- as.factor(winewhite$quality) #make original a factor
+
+winewhite$quality2 <- as.factor(winewhite$quality2) #make dummy a factor
+
+count(winewhite$quality2)
 
 
 
