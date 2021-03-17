@@ -63,7 +63,9 @@ ui <- navbarPage("Shiny app",
                               selectInput(inputId = "plotlyYs", 
                                           label = "Select y-axis variable", 
                                           choices=colnames(winewhite),
-                                          selected = "fixed.acidity") 
+                                          selected = "fixed.acidity")
+                              
+                              
                           ),
                              
                                 
@@ -72,12 +74,13 @@ ui <- navbarPage("Shiny app",
                               h3("Plot of Quality while comparing other variables"),
                               
                               plotlyOutput(outputId = "hello"),
-                        
+                              
                          hr(),
                        HTML(
                          paste(
                          "*There are no quality values for 0, 1, 2 and 10, other words
-                          there is no wine that has no quality or is perfect.",'<br/>'))                    
+                          there is no wine that has no quality or is perfect.",'<br/>'))
+                       
                         
                         ), #main panel closing
                          
@@ -86,7 +89,10 @@ ui <- navbarPage("Shiny app",
                     )),
                  
                               
-                    tabPanel("Table", "Table", DT::dataTableOutput("mytable"))
+                    tabPanel("Table", DT::dataTableOutput("potatoes")),
+                 
+                    tabPanel("Lasso Table", DT::dataTableOutput("data_table"))
+                             
                             
                    ) # close navbarPage
                  
@@ -112,12 +118,50 @@ server <- function(input, output) {
      })
     
     output$mytable = DT::renderDataTable({
-      winewhite
+      input$plotlyXs
+      })
+    
+    
+    
+    #ATTEMPT TO LASSO
+    
+    selected<-reactive({
+      # event_data("plotly_click", source = "master")
+      event_data("plotly_selected", source = "master")
+    })
+    
+    
+    output$text <- renderPrint({ 
+      list(selection=selected(),
+           dims=data()$sel)
+    })
+    
+    
+    output$data_table<-DT::renderDataTable(
+      data()$sel, filter = 'top', options = list(  
+        pageLength = 5, autoWidth = TRUE
+      )
+    )
+    
+  
+    #reactive data
+    data<-reactive({
       
+      tmp<-winewhite 
+      
+      sel<-tryCatch(winewhite[(selected()$pointNumber+1),,drop=FALSE] , error=function(e){NULL})
+      
+      list(data=tmp,sel=sel)
+      
+    })
+    
+    #END OF ATTEMPT TO LASSO
     
     
-  })
-}
+    
+    
+    
+} #end of server
 
 # Run the application 
 
