@@ -34,15 +34,26 @@ names(winewhite)[names(winewhite) == "quality"] <- "Quality"
 
 # R SHINY CODE
 
-list_choices <-  unique(winewhite$Quality)
+list_choices <- unique(winewhite$Quality)
 list_choices <- list_choices[!is.na(list_choices)]
 list_choices <- sort(list_choices)
+
+#BUTTON HEADER
+
+
+myHeader <- div(id="advanced",
+                useShinyjs(),
+                downloadButton("report", "Generate report"),
+                )
+
 
 
 # Define UI for application that draws a histogram
 ui <- navbarPage("Shiny app",
                  
                  theme = shinytheme("sandstone"),
+                 
+                 header = myHeader,
                  
                  tabPanel("Plot",
                     fluidPage(
@@ -71,12 +82,14 @@ ui <- navbarPage("Shiny app",
                                 
                         mainPanel(
                                 
-                              h3("Plot of Quality while comparing other variables"),
+                              h3("Plot of wine quality while comparing other variables"),
                               
                               plotlyOutput(outputId = "hello"),
                               
-                         hr(),
+                        hr(),
+                         
                        HTML(
+                         
                          paste(
                          "*There are no quality values for 0, 1, 2 and 10, other words
                           there is no wine that has no quality or is perfect.",'<br/>'))
@@ -89,7 +102,7 @@ ui <- navbarPage("Shiny app",
                     )),
                  
                               
-                    tabPanel("Table", DT::dataTableOutput("potatoes")),
+                    tabPanel("Table", DT::dataTableOutput("mytable")),
                  
                     tabPanel("Lasso Table", DT::dataTableOutput("data_table"))
                              
@@ -98,10 +111,11 @@ ui <- navbarPage("Shiny app",
                  
              
 
-#col_scale <- scale_colour_discrete(limits = list_choices)
+# col_scale <- scale_colour_discrete(limits = list_choices)
 
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw a plot
+
 server <- function(input, output) {
   
   output$hello <- renderPlotly({
@@ -109,21 +123,22 @@ server <- function(input, output) {
      
    # %>% filter(Quality == input$select)
     
-    ggplot(winewhite 
+      p <- ggplot(winewhite 
            ,aes_string(x = input$plotlyXs, y = input$plotlyYs, colour = "Quality")) +
-     # col_scale +
-      geom_point()
+             # col_scale +
+            geom_point()
+      
+      ggplotly(p,source="master")
      
     
      })
     
     output$mytable = DT::renderDataTable({
-      input$plotlyXs
-      })
+      winewhite}, filter = 'top')
     
     
     
-    #ATTEMPT TO LASSO
+    #LASSO TABLE
     
     selected<-reactive({
       # event_data("plotly_click", source = "master")
@@ -137,17 +152,18 @@ server <- function(input, output) {
     })
     
     
-    output$data_table<-DT::renderDataTable(
+    output$data_table <- DT::renderDataTable(
       data()$sel, filter = 'top', options = list(  
         pageLength = 5, autoWidth = TRUE
       )
     )
     
-  
+
     #reactive data
+    
     data<-reactive({
       
-      tmp<-winewhite 
+      tmp<-winewhite
       
       sel<-tryCatch(winewhite[(selected()$pointNumber+1),,drop=FALSE] , error=function(e){NULL})
       
@@ -155,12 +171,37 @@ server <- function(input, output) {
       
     })
     
-    #END OF ATTEMPT TO LASSO
+    #END OF LASSO TABLE
     
+    output$report <- downloadHandler(
+      # For PDF output, change this to "report.pdf"
+      filename = "report.pdf",
+      content = function(file) {
+        # Copy the report file to a temporary directory before processing it, in
+        # case we don't have write permissions to the current working dir (which
+        # can happen when deployed).
+        tempReport <- file.path(tempdir(), "report.Rmd")
+        file.copy("report.Rmd", tempReport, overwrite = TRUE)
+        
+        # Set up parameters to pass to Rmd document
+        params <- list(
+          Xs = isolate(input$plotlyXs),
+          Ys = isolate(input$plotlyYs),
+          winewhite = isolate(winewhite),
+          data = isolate(d)
+        )
+        
+        # Knit the document, passing in the `params` list, and eval it in a
+        # child of the global environment (this isolates the code in the document
+        # from the code in this app).
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv())
+        )
+      }
+    )
     
-    
-    
-    
+  
 } #end of server
 
 # Run the application 
