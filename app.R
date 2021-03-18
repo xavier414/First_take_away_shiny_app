@@ -119,7 +119,7 @@ ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                  ),
                  
                  
-                 tabPanel("Interactive Scaterplot",
+                 tabPanel("Interactive Scatterplot",
                           
                     fluidPage(
                       

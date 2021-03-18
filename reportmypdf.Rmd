@@ -1,7 +1,6 @@
 ---
 title: "Generated Report - White Wine Quality"
 author: "Xavier Bryant"
-date: "17/03/2021"
 output: pdf_document
 params:
   Xs: Xs 
