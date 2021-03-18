@@ -30,7 +30,7 @@ apply(winewhite, 2, function(x) length(unique(x)))
 
 c(table(winewhite$quality)) #number of categories, extremely unbalanced, most within 5 and 6
 
-winewhite$quality <- as.factor(winewhite$quality) #make original a factor
+winewhite$quality = winewhite$quality %>% factor #make original a factor with dplyr of tidyverse
 
 names(winewhite)[names(winewhite) == "quality"] <- "Quality"
 
