@@ -1,9 +1,8 @@
-unique(is.na(winered))# no missing values
-unique(is.na(winewhite)) #no missing values
-
-
 
 #RED WINE DATA EDITS
+
+unique(is.na(winered))# no missing values
+unique(is.na(winewhite)) #no missing values
 
 summary(winered)
 

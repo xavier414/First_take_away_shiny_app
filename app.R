@@ -1,11 +1,5 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
+## WHITE WINE APP BY XAVIER BRYANT  
 
 library(shiny)
 library(tidyverse)
@@ -43,7 +37,7 @@ names(winewhite)[names(winewhite) == "quality"] <- "Quality"
 attach(winewhite)
 
 
-# R SHINY CODE
+#R SHINY CODE
 
 list_choices <- unique(winewhite$Quality)
 list_choices <- list_choices[!is.na(list_choices)]
@@ -53,7 +47,7 @@ list_choices <- sort(list_choices)
 
 button <- div(id="advanced",
                      useShinyjs(),
-                     downloadButton("report", "Generate report"),
+                     downloadButton("report", "Generate PDF of Plot and Data Summary"),
        
                     )
 
@@ -72,7 +66,7 @@ ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                                           hr(),
                                           br(),
                                           
-                                          HTML(paste("This dataset assesses the quality of 4898 white wine variants from the Portuguese Vinho Verde region based on 11 physicochemical features. The region
+                                          HTML(paste("This data set assesses the quality of 4898 white wine variants from the Portuguese Vinho Verde region based on 11 physicochemical features. The region
                                                      is in the northwest of Portugal as shown in the adjacent map to the left. The data was originally used in the paper")),                                                    
                                           tags$a(href="https://www.sciencedirect.com/science/article/abs/pii/S0167923609001377?via%3Dihub", "Modeling wine preferences by data mining from physicochemical properties"),
                                           HTML(paste("by Cortez et al. (2009).")),
@@ -111,7 +105,7 @@ ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                                           br(),
                                           br(),
                                           
-                                          HTML(paste("In this analysis, there is an interactive scatter plot where you can select the x and y axis from the physicochemical properties . The data is coloured by quality.
+                                          HTML(paste("In this analysis, there is an interactive scatterplot where you can select the x and y axis from the physicochemical properties . The data is coloured by quality.
                                             The lasso feature can be used on the scatter plot to select data. This selected data can then be viewed in the <em> Lasso Table </em> tab. The entire
                                             data set can be viewed in <em> Table </em> tab and filters applied to select specific data.")), 
                                         
@@ -125,7 +119,7 @@ ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                  ),
                  
                  
-                 tabPanel("Interactive Plot",
+                 tabPanel("Interactive Scaterplot",
                           
                     fluidPage(
                       
@@ -153,14 +147,14 @@ ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                                 
                         mainPanel(
                                 
-                              h3("Plot of white wine quality while comparing other variables"),
+                              h3("Scatterplot of white wine quality while comparing physicochemical features"),
                               
                               hr(),
                               
                               HTML(
                                 
                                 paste(
-                                  "<b> Please use the Lasso function in the interactive plot and see your selected data in the  <em> Lasso 
+                                  "<b> Please use the Lasso function in the interactive scatterplot to see your selected data in the  <em> Lasso 
                            Table </em>  tab. </b> 
                            <br> </br>
                            You can see the full data set and apply filters in the <em> 

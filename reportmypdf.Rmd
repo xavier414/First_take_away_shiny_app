@@ -29,7 +29,7 @@ winewhite <- read.csv("https://query.data.world/s/tmlt63lm3n3uzb2ujhlmkarlzoeo73
 ```
 
 
-This dataset assesses the quality of 4898 white wine variants from the Portuguese Vinho Verde region based on 11 physicochemical features. The region is in the northwest corner of Portugal.  The data was originally used in the paper [Modeling wine preferences by data mining from physicochemical properties](https://www.sciencedirect.com/science/article/abs/pii/S0167923609001377?via%3Dihub)by Cortez et al. (2009). The data set is posted on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/wine+quality), but was sourced in this project from [data.world](https://archive.ics.uci.edu/ml/datasets/wine+quality).
+This data set assesses the quality of 4898 white wine variants from the Portuguese Vinho Verde region based on 11 physicochemical features. The region is in the northwest corner of Portugal.  The data was originally used in the paper [Modeling wine preferences by data mining from physicochemical properties](https://www.sciencedirect.com/science/article/abs/pii/S0167923609001377?via%3Dihub)by Cortez et al. (2009). The data set is posted on the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/wine+quality), but was sourced in this project from [data.world](https://archive.ics.uci.edu/ml/datasets/wine+quality).
 
 
 The physicochemical properties of the white wine variants that act as the input variables:
@@ -50,7 +50,7 @@ The physicochemical properties of the white wine variants that act as the input 
 
 The *output* variable is quality on a scale of 1 to 10, however values 0,1,2 and 10 do not - indicating there is no wine that is of perfect or no quality. 
 
-You can see your plot below based on the physicochemical properties choosen for the x and y axis, that are coloured by quality. A summary of the choosen variables are also provided, along with a summary of the *quality* variable.
+You can see your plot below based on the physicochemical properties chosen for the x and y axis, that are coloured by quality. A summary of the chosen variables are also provided, along with a summary of the *quality* variable.
 
 \newpage
 
