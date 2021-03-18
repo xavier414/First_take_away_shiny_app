@@ -42,11 +42,16 @@ list_choices <- sort(list_choices)
 #BUTTON HEADER
 
 
-myHeader <- div(id="advanced",
-                useShinyjs(),
-                downloadButton("report", "Generate report"),
+#myHeader <- div(id="advanced",
+ #               useShinyjs(),
+  #              downloadButton("report", "Generate report"),
                 
-                )
+   #             )
+button <- div(id="advanced",
+                     useShinyjs(),
+                     downloadButton("report", "Generate report"),
+       
+                    )
 
 
 
@@ -55,9 +60,9 @@ ui <- navbarPage("Shiny app",
                  
                  theme = shinytheme("sandstone"),
                  
-                 header = myHeader,
+                 # header = myHeader,
                  
-                 tabPanel("Plot",
+                 tabPanel("White Wine Plot",
                     fluidPage(
                       
                           sidebarLayout(
@@ -76,15 +81,18 @@ ui <- navbarPage("Shiny app",
                               selectInput(inputId = "plotlyYs", 
                                           label = "Select y-axis variable", 
                                           choices=colnames(winewhite),
-                                          selected = "fixed.acidity")
+                                          selected = "fixed.acidity"),
+                              
+                              button
                               
                               
                           ),
                              
+                        
                                 
                         mainPanel(
                                 
-                              h3("Plot of wine quality while comparing other variables"),
+                              h3("Plot of white wine quality while comparing other variables"),
                               
                               plotlyOutput(outputId = "hello"),
                               
@@ -94,7 +102,18 @@ ui <- navbarPage("Shiny app",
                          
                          paste(
                          "*There are no quality values for 0, 1, 2 and 10, other words
-                          there is no wine that has no quality or is perfect.",'<br/>'))
+                          there is no wine that has no quality or is perfect.",'<br/>')),
+                       
+                       hr(),
+                       
+                       HTML(
+                         
+                         paste(
+                           "<b> Please use the Lasso function in the interactive plot and see your selected data in the  <em> Lasso 
+                           Table </em>  tab. </b> 
+                           <br> </br>
+                           You can see the full data set and apply filters to the data in the <em> 
+                           Table </em>  tab. "))
                        
                         
                         ), #main panel closing
@@ -103,10 +122,14 @@ ui <- navbarPage("Shiny app",
                           ),
                     )),
                  
-                              
-                    tabPanel("Table", DT::dataTableOutput("mytable")),
                  
-                    tabPanel("Lasso Table", DT::dataTableOutput("data_table"))
+                 
+                              
+                    
+                 
+                    tabPanel("Lasso Table", DT::dataTableOutput("data_table")),
+                 
+                    tabPanel("Table", DT::dataTableOutput("mytable"))
                              
                             
                    ) # close navbarPage
@@ -175,10 +198,10 @@ server <- function(input, output) {
     
     #END OF LASSO TABLE
     
-   # xsummary <- reactive( summary(input$plotlyXs)   )
-  #  ysummary <-  reactive( summary(input$plotlyYs) )
-   # xhead <-  reactive( summary(input$plotlyXs) )
-    # yhead <-  reactive( summary(input$plotlyYs)  )
+   xsummary <- reactive( summary(input$plotlyXs)   )
+    ysummary <-  reactive( summary(input$plotlyYs) )
+    xhead <-  reactive( summary(input$plotlyXs) )
+     yhead <-  reactive( summary(input$plotlyYs)  )
    
     
     output$report <- downloadHandler(
