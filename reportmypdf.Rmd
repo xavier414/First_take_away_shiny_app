@@ -1,6 +1,6 @@
 ---
 title: "Generated Report - White Wine Quality"
-author: "Xavier Bryant"
+author: "App by: Xavier Bryant"
 output: pdf_document
 params:
   Xs: Xs 
