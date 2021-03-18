@@ -18,7 +18,6 @@ library(DT)
 library(ggplot2)
 
 
-runGitHub("First_take_away_shiny_app","xavier414")
 
 
 ## Data uploading 
@@ -56,7 +55,7 @@ ui <- navbarPage("Shiny app",
                  
                  theme = shinytheme("sandstone"),
                  
-                 header = myfooter,
+                 header = myHeader,
                  
                  tabPanel("Plot",
                     fluidPage(
@@ -176,9 +175,15 @@ server <- function(input, output) {
     
     #END OF LASSO TABLE
     
+   # xsummary <- reactive( summary(input$plotlyXs)   )
+  #  ysummary <-  reactive( summary(input$plotlyYs) )
+   # xhead <-  reactive( summary(input$plotlyXs) )
+    # yhead <-  reactive( summary(input$plotlyYs)  )
+   
+    
     output$report <- downloadHandler(
       # For PDF output, change this to "report.pdf"
-      filename = "report.pdf",
+      filename = "reportmypdf.pdf",
       content = function(file) {
         # Copy the report file to a temporary directory before processing it, in
         # case we don't have write permissions to the current working dir (which
@@ -191,7 +196,10 @@ server <- function(input, output) {
           Xs = isolate(input$plotlyXs),
           Ys = isolate(input$plotlyYs),
           winewhite = isolate(winewhite),
-          data = isolate(d)
+          xsummary = isolate(xsummary),
+          ysummary = isolate(ysummary),
+          xhead = isolate(xhead),
+          yhead = isolate(yhead)
         )
         
         # Knit the document, passing in the `params` list, and eval it in a

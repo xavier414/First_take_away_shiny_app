@@ -7,7 +7,10 @@ params:
   Xs: Xs 
   Ys: Ys
   winewhite: winewhite
-  data: data
+  xsummary: xsummary
+  ysummary: ysummary
+  xhead: xhead
+  yhead: yhead
 ---
 
 ```{r setup, include=FALSE}
@@ -38,14 +41,23 @@ ggplot(winewhite,aes_string(x = params$Xs, y = params$Ys, colour = "Quality")) +
 
 
 
-## Table for x and y variables choosen
+## Summary of the x and y variables choosen
 
 
-Below is a summary and table of the x and y variables you've choosen in a
+Below are the summaries of the x and y variables you've choosen.
 
 
 ```{r, echo=FALSE}
-kable(data.frame(params$Xs, params$Ys, sort(winewhite$Quality)))
+x <- params$Xs
+y <- params$Ys
+x <- eval(parse(text = x))
+y <- eval(parse(text = y))
+params$Xs
+summary(x)
+params$Ys
+summary(y)
+"Quality"
+summary(winewhite$Quality)
 ```
 
 
