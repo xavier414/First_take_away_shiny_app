@@ -78,3 +78,35 @@ corrwinewhite <- cor(winewhite2)
 corrplot(logregwinewhite)
 
 winewhite$quality <- as.numeric(winewhite$quality) #make original a factor
+
+#BUTTON HEAD
+
+#myHeader <- div(id="advanced",
+#               useShinyjs(),
+#              downloadButton("report", "Generate report"),
+
+# 
+
+
+# header = myHeader,
+
+# SORTING ON QUALITY
+
+#selectInput("select", label = h3("Plot by Quality"), 
+#            choices = list_choices,
+#            selected = 1),
+
+# col_scale <- scale_colour_discrete(limits = list_choices)
+
+# attempted parameters
+
+xsummary: xsummary
+ysummary: ysummary
+xhead: xhead
+yhead: yhead
+
+
+xsummary = isolate(xsummary)
+ysummary = isolate(ysummary)
+xhead = isolate(xhead)
+yhead = isolate(yhead)

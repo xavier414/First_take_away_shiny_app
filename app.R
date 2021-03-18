@@ -19,18 +19,28 @@ library(ggplot2)
 
 
 
+## DATA UPLOADING AND REVIEW
 
-## Data uploading 
 
-
-winered <- read.csv("https://query.data.world/s/yy4ie6vjf6igi2yyhty4s5ay2pmogx", header=TRUE, stringsAsFactors=FALSE)
 winewhite <- read.csv("https://query.data.world/s/tmlt63lm3n3uzb2ujhlmkarlzoeo73", header=TRUE, stringsAsFactors=FALSE)
+
+unique(is.na(winewhite)) #no missing values
+
+summary(winewhite)
+
+str(winewhite)
+
+apply(winewhite, 2, function(x) length(unique(x)))
+
+#all clearly continuous except quality, which has 7 possible values (on a scale of 10 bizarrely)
+
+c(table(winewhite$quality)) #number of categories, extremely unbalanced, most within 5 and 6
 
 winewhite$quality <- as.factor(winewhite$quality) #make original a factor
 
-attach(winewhite)
-
 names(winewhite)[names(winewhite) == "quality"] <- "Quality"
+
+attach(winewhite)
 
 
 # R SHINY CODE
@@ -39,14 +49,8 @@ list_choices <- unique(winewhite$Quality)
 list_choices <- list_choices[!is.na(list_choices)]
 list_choices <- sort(list_choices)
 
-#BUTTON HEADER
+#BUTTON 
 
-
-#myHeader <- div(id="advanced",
- #               useShinyjs(),
-  #              downloadButton("report", "Generate report"),
-                
-   #             )
 button <- div(id="advanced",
                      useShinyjs(),
                      downloadButton("report", "Generate report"),
@@ -56,22 +60,79 @@ button <- div(id="advanced",
 
 
 # Define UI for application that draws a histogram
-ui <- navbarPage("Shiny app",
+ui <- navbarPage("App: White Wine Quality in Vinho Verde",
                  
                  theme = shinytheme("sandstone"),
                  
-                 # header = myHeader,
+                 tabPanel("Data Overview",
+                          
+                          
+                          fluidRow(column(h2("White Wine Quality in Vinho Verde"),
+                                          
+                                          hr(),
+                                          br(),
+                                          
+                                          HTML(paste("This dataset assesses the quality of 4898 white wine variants from the Portuguese Vinho Verde region based on 11 physicochemical features. The region
+                                                     is in the northwest of Portugal as shown in the adjacent map to the left. The data was originally used in the paper")),                                                    
+                                          tags$a(href="https://www.sciencedirect.com/science/article/abs/pii/S0167923609001377?via%3Dihub", "Modeling wine preferences by data mining from physicochemical properties"),
+                                          HTML(paste("by Cortez et al. (2009).")),
+                                          HTML(paste("The data set is posted on the")),
+                                          tags$a(href="https://archive.ics.uci.edu/ml/datasets/wine+quality", "UCI Machine Learning Repository"), 
+                                          HTML(paste(", but was sourced in this project from")),
+                                          tags$a(href="https://data.world/food/wine-quality", "data.world."), 
+                                          
+                                          br(),
+                                          br(),
+                                          
+                                          
+                                          HTML(paste("The physicochemical properties of the white wine variants that act as the input variables:")),
+                                          br(),
+                                          tags$ul(
+                                            tags$li("Fixed acidity"), 
+                                            tags$li("Bolatile acidity"), 
+                                            tags$li("Third list item"),
+                                            tags$li("Citric acid"), 
+                                            tags$li("Residual sugar"), 
+                                            tags$li("Chlorides"), 
+                                            tags$li("Free sulfur dioxide"), 
+                                            tags$li("Total sulfur dioxide"), 
+                                            tags$li("Density"), 
+                                            tags$li("pH"), 
+                                            tags$li("Sulphates"), 
+                                            tags$li("Alcohol")
+                                          ),
+                                          
+                                          br(),
+                                          br(),
+                                          
+                                          HTML(paste("The output variable is <em> quality </em> on a scale of 1 to 10, however values 0,1,2 and 10 do not - indicating there is no wine that
+                                                     is of perfect or no quality.")),
+                                          
+                                          br(),
+                                          br(),
+                                          
+                                          HTML(paste("In this analysis, there is an interactive scatter plot where you can select the x and y axis from the physicochemical properties . The data is coloured by quality.
+                                            The lasso feature can be used on the scatter plot to select data. This selected data can then be viewed in the <em> Lasso Table </em> tab. The entire
+                                            data set can be viewed in <em> Table </em> tab and filters applied to select specific data.")), 
+                                        
+                                          
+                                           width=8),
+                                      column(h4("Map of Portuguese Wine Regions: Vinho Verde"), uiOutput("img"), width=4)
+                                      
+                          )
+                          
+                   
+                 ),
                  
-                 tabPanel("White Wine Plot",
+                 
+                 tabPanel("Interactive Plot",
+                          
                     fluidPage(
                       
                           sidebarLayout(
                           sidebarPanel(
                             
-                            #selectInput("select", label = h3("Plot by Quality"), 
-                             #            choices = list_choices,
-                              #            selected = 1),
-                             
+                            
                               
                               selectInput(inputId = "plotlyXs", 
                                         label = "Select x-axis variable", 
@@ -87,33 +148,35 @@ ui <- navbarPage("Shiny app",
                               
                               
                           ),
-                             
+                        
                         
                                 
                         mainPanel(
                                 
                               h3("Plot of white wine quality while comparing other variables"),
                               
-                              plotlyOutput(outputId = "hello"),
+                              hr(),
                               
-                        hr(),
-                         
-                       HTML(
-                         
-                         paste(
-                         "*There are no quality values for 0, 1, 2 and 10, other words
-                          there is no wine that has no quality or is perfect.",'<br/>')),
-                       
-                       hr(),
-                       
-                       HTML(
-                         
-                         paste(
-                           "<b> Please use the Lasso function in the interactive plot and see your selected data in the  <em> Lasso 
+                              HTML(
+                                
+                                paste(
+                                  "<b> Please use the Lasso function in the interactive plot and see your selected data in the  <em> Lasso 
                            Table </em>  tab. </b> 
                            <br> </br>
-                           You can see the full data set and apply filters to the data in the <em> 
-                           Table </em>  tab. "))
+                           You can see the full data set and apply filters in the <em> 
+                           Table </em>  tab. ")),
+                              
+                              plotlyOutput(outputId = "hello"),
+                              
+                       
+                         
+                       HTML(
+                         
+                         paste(
+                         " <br> </br> *There are no quality values for 0, 1, 2 and 10, in other words
+                          there is no wine that has no quality or is perfect.",'<br/>'))
+                       
+                       
                        
                         
                         ), #main panel closing
@@ -127,22 +190,37 @@ ui <- navbarPage("Shiny app",
                               
                     
                  
-                    tabPanel("Lasso Table", DT::dataTableOutput("data_table")),
+                 tabPanel("Lasso Table", DT::dataTableOutput("data_table"),
+                          
+                          hr(),
+                          
+                          HTML(
+                            
+                            paste(
+                              "Inspired by")),
+                          tags$a(href="https://gist.github.com/dgrapov/128e3be71965bf00495768e47f0428b9", "dgrapov GitHub post")
+                          
+                          ),
                  
-                    tabPanel("Table", DT::dataTableOutput("mytable"))
-                             
+                 tabPanel("Table", DT::dataTableOutput("mytable"))
+                 
                             
                    ) # close navbarPage
                  
-             
 
-# col_scale <- scale_colour_discrete(limits = list_choices)
 
 
 # Define server logic required to draw a plot
 
 server <- function(input, output) {
   
+  # IMAGE
+  
+  output$img <- renderUI({
+    tags$img(src = "https://bloximages.chicago2.vip.townnews.com/napavalleyregister.com/content/tncms/assets/v3/editorial/4/32/43209ca6-a84a-11e2-912d-001a4bcf887a/517028002c1eb.image.jpg") 
+  }) #closing image
+    
+    
   output$hello <- renderPlotly({
     
      
@@ -205,29 +283,16 @@ server <- function(input, output) {
    
     
     output$report <- downloadHandler(
-      # For PDF output, change this to "report.pdf"
       filename = "reportmypdf.pdf",
       content = function(file) {
-        # Copy the report file to a temporary directory before processing it, in
-        # case we don't have write permissions to the current working dir (which
-        # can happen when deployed).
         tempReport <- file.path(tempdir(), "reportmypdf.Rmd")
         file.copy("reportmypdf.Rmd", tempReport, overwrite = TRUE)
         
-        # Set up parameters to pass to Rmd document
         params <- list(
           Xs = isolate(input$plotlyXs),
-          Ys = isolate(input$plotlyYs),
-          winewhite = isolate(winewhite),
-          xsummary = isolate(xsummary),
-          ysummary = isolate(ysummary),
-          xhead = isolate(xhead),
-          yhead = isolate(yhead)
+          Ys = isolate(input$plotlyYs)
         )
-        
-        # Knit the document, passing in the `params` list, and eval it in a
-        # child of the global environment (this isolates the code in the document
-        # from the code in this app).
+      
         rmarkdown::render(tempReport, output_file = file,
                           params = params,
                           envir = new.env(parent = globalenv())
