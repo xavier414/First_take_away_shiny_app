@@ -18,6 +18,8 @@ library(DT)
 library(ggplot2)
 
 
+runGitHub("First_take_away_shiny_app","xavier414")
+
 
 ## Data uploading 
 
@@ -44,6 +46,7 @@ list_choices <- sort(list_choices)
 myHeader <- div(id="advanced",
                 useShinyjs(),
                 downloadButton("report", "Generate report"),
+                
                 )
 
 
@@ -53,7 +56,7 @@ ui <- navbarPage("Shiny app",
                  
                  theme = shinytheme("sandstone"),
                  
-                 header = myHeader,
+                 header = myfooter,
                  
                  tabPanel("Plot",
                     fluidPage(
@@ -180,8 +183,8 @@ server <- function(input, output) {
         # Copy the report file to a temporary directory before processing it, in
         # case we don't have write permissions to the current working dir (which
         # can happen when deployed).
-        tempReport <- file.path(tempdir(), "report.Rmd")
-        file.copy("report.Rmd", tempReport, overwrite = TRUE)
+        tempReport <- file.path(tempdir(), "reportmypdf.Rmd")
+        file.copy("reportmypdf.Rmd", tempReport, overwrite = TRUE)
         
         # Set up parameters to pass to Rmd document
         params <- list(

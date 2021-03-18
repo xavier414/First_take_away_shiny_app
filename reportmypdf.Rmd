@@ -12,6 +12,8 @@ params:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(options(knitr.kable.NA = ''))
+knitr::opts_chunk$set(fig.width=8, fig.height=4)
 library(tidyverse)
 library(VGAM)
 library(corrplot)
@@ -19,12 +21,16 @@ library(ggplot2)
 library(knitr)
 ```
 
+
+## Data Description
+
+
+
 ## Plot
 
-This is an R Markdown document. Markdown is a simple formatting
+Here is the plot you've made based on the variables you've picked.
 
-
-```{r}
+```{r, echo=FALSE}
 ggplot(winewhite,aes_string(x = params$Xs, y = params$Ys, colour = "Quality")) +
              # col_scale +
             geom_point()
@@ -32,11 +38,14 @@ ggplot(winewhite,aes_string(x = params$Xs, y = params$Ys, colour = "Quality")) +
 
 
 
-## Lasso Table
+## Table for x and y variables choosen
 
 
-```{r}
-kable(table(params$data))
+Below is a summary and table of the x and y variables you've choosen in a
+
+
+```{r, echo=FALSE}
+kable(data.frame(params$Xs, params$Ys, sort(winewhite$Quality)))
 ```
 
 
